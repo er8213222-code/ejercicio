@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>E' FIT</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    background:#070707;
+    color:white;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+.app{
+    max-width:430px;
+    min-height:100vh;
+    margin:auto;
+    padding-bottom:90px;
+}
+
+.top{
+    text-align:center;
+    padding:22px;
+    font-size:25px;
+    font-weight:900;
+    border-bottom:1px solid #222;
+}
+
+.red{
+    color:#ff1e2d;
+}
+
+.screen{
+    display:none;
+}
+
+.screen.active{
+    display:block;
+}
+
+.card{
+    margin:18px;
+    padding:18px;
+    background:#151515;
+    border-radius:18px;
+}
+
+.hero{
+    background:#25080b;
+}
+
+.title{
+    color:#ff1e2d;
+    font-weight:900;
+    font-size:15px;
+}
+
+.big{
+    font-size:32px;
+    font-weight:900;
+}
+
+.work{
+    font-size:20px;
+    font-weight:900;
+    line-height:1.35;
+    margin:10px 0;
+}
+
+.small{
+    color:#aaa;
+    font-size:13px;
+}
+
+.btn{
+    width:100%;
+    border:0;
+    border-radius:13px;
+    padding:15px;
+    margin-top:12px;
+    background:#ff1e2d;
+    color:white;
+    font-size:16px;
+    font-weight:900;
+}
+
+.btn.dark{
+    background:#252525;
+}
+
+.btn:disabled{
+    background:#421116;
+    color:#999;
+}
+
+.exercise{
+    text-align:center;
+    font-size:28px;
+    font-weight:900;
+    margin-top:40px;
+}
+
+.timer{
+    text-align:center;
+    font-size:65px;
+    font-weight:900;
+    color:#ff1e2d;
+    margin:15px;
+}
+
+.message{
+    text-align:center;
+    color:#ff6872;
+    font-weight:900;
+    font-size:13px;
+    min-height:20px;
+}
+
+.rules{
+    margin:18px;
+    padding:16px;
+    background:#151515;
+    border-radius:15px;
+    font-size:13px;
+    line-height:1.6;
+}
+
+/* AVISO ENTRE EJERCICIOS */
+
+.finish-screen{
+    display:none;
+    text-align:center;
+    padding:35px 20px;
+}
+
+.finish-screen.active{
+    display:block;
+}
+
+.finish-title{
+    color:#ff1e2d;
+    font-size:30px;
+    font-weight:900;
+    margin-top:30px;
+}
+
+.finish-exercise{
+    font-size:22px;
+    font-weight:900;
+    margin-top:20px;
+}
+
+.next-name{
+    font-size:18px;
+    color:#aaa;
+    margin-top:15px;
+}
+
+.check{
+    font-size:60px;
+    margin-top:20px;
+}
+
+.nav{
+    position:fixed;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:430px;
+    height:78px;
+    background:#121212;
+    border-top:1px solid #292929;
+    display:flex;
+}
+
+.nav button{
+    flex:1;
+    border:0;
+    background:none;
+    color:#aaa;
+    font-size:12px;
+    font-weight:700;
+}
+
+.nav button.active{
+    color:#ff1e2d;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- INICIO -->
+
+<section id="home" class="screen active">
+
+<div class="top">
+E' <span class="red">FIT</span>
+</div>
+
+<div class="card hero">
+
+<div>RACHA</div>
+
+<div class="big red" id="streak">
+12 DÍAS
+</div>
+
+<div style="margin-top:15px;">
+PROTECTORES: 2
+</div>
+
+<div class="small">
++ 1 día de tolerancia
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="title">
+ENTRENAMIENTO DE HOY
+</div>
+
+<div class="work">
+ABDOMEN + PECHO<br>
+BRAZOS + PIERNAS
+</div>
+
+<div class="small">
+8 ejercicios · 15–25 min
+</div>
+
+<button class="btn" onclick="startWorkout()">
+EMPEZAR ENTRENAMIENTO
+</button>
+
+</div>
+
+<div class="card">
+
+<div class="title">
+PROGRESO
+</div>
+
+<div class="big red" id="homeCompleted">
+0
+</div>
+
+<div>
+entrenamientos completados
+</div>
+
+</div>
+
+<center>
+<b>NO FINGAS. ENTRENA.</b>
+</center>
+
+</section>
+
+
+<!-- ENTRENAMIENTO -->
+
+<section id="workout" class="screen">
+
+<div class="top">
+E' <span class="red">FIT</span> · RUTINA
+</div>
+
+<div class="exercise" id="exerciseName">
+PLANCHA
+</div>
+
+<div class="small" style="display:block;text-align:center" id="exerciseNumber">
+Ejercicio 1 de 8
+</div>
+
+<div class="timer" id="timer">
+30
+</div>
+
+<div class="message" id="message">
+Pulsa COMENZAR para iniciar.
+</div>
+
+<div class="rules">
+
+<b class="red">
+REGLAS
+</b>
+
+<br>
+
+Mientras el ejercicio esté en curso no puedes saltarlo.
+
+<br>
+
+Si abandonas antes de terminar, no cuenta.
+
+<br>
+
+Hazlo con técnica controlada.
+
+</div>
+
+<div style="padding:0 18px;">
+
+<button
+class="btn"
+id="startButton"
+onclick="startExercise()">
+COMENZAR
+</button>
+
+<button
+class="btn dark"
+id="nextButton"
+onclick="showFinished()"
+disabled>
+SIGUIENTE
+</button>
+
+<button
+class="btn dark"
+onclick="abortWorkout()">
+ABANDONAR
+</button>
+
+</div>
+
+</section>
+
+
+<!-- AVISO TERMINADO -->
+
+<section id="finished" class="screen finish-screen">
+
+<div class="check">
+✓
+</div>
+
+<div class="finish-title">
+¡TERMINASTE!
+</div>
+
+<div class="finish-exercise" id="finishedExercise">
+PLANCHA
+</div>
+
+<div class="next-name">
+Siguiente ejercicio:
+<br>
+<strong id="nextExercise">
+CRUNCH CONTROLADO
+</strong>
+</div>
+
+<button
+class="btn"
+onclick="continueExercise()">
+CONTINUAR
+</button>
+
+<button
+class="btn dark"
+onclick="abortWorkout()">
+SALIR
+</button>
+
+</section>
+
+
+<!-- PROGRESO -->
+
+<section id="progress" class="screen">
+
+<div class="top">
+PROGRESO
+</div>
+
+<div class="card">
+
+<div class="title">
+ENTRENAMIENTOS
+</div>
+
+<div class="big red" id="completed">
+0
+</div>
+
+<div>
+entrenamientos completados
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="title">
+RACHA
+</div>
+
+<div class="big red" id="progressStreak">
+12 DÍAS
+</div>
+
+</div>
+
+</section>
+
+
+<!-- MÁS -->
+
+<section id="more" class="screen">
+
+<div class="top">
+MÁS
+</div>
+
+<div class="card">
+
+<div class="work">
+Mi perfil
+</div>
+
+<div class="work">
+Racha y protectores
+</div>
+
+<div class="work">
+Recordatorios
+</div>
+
+<div class="work">
+Sonidos
+</div>
+
+<div class="work">
+Consejos
+</div>
+
+</div>
+
+</section>
+
+
+<!-- NAVEGACIÓN -->
+
+<nav class="nav">
+
+<button
+class="active"
+onclick="showScreen('home',this)">
+⌂<br>
+Inicio
+</button>
+
+<button
+onclick="showScreen('workout',this)">
+▶<br>
+Rutina
+</button>
+
+<button
+onclick="showScreen('progress',this)">
+▥<br>
+Progreso
+</button>
+
+<button
+onclick="showScreen('more',this)">
+•••<br>
+Más
+</button>
+
+</nav>
+
+</div>
+
+
+<script>
+
+const exercises = [
+
+["PLANCHA",30],
+
+["CRUNCH CONTROLADO",30],
+
+["DEAD BUG",30],
+
+["ELEVACIONES DE RODILLAS",30],
+
+["SENTADILLAS",30],
+
+["LAGARTIJAS",30],
+
+["PUENTE DE GLÚTEOS",30],
+
+["MARCHA DE CORE",30]
+
+];
+
+let currentExercise = 0;
+
+let timeLeft = 30;
+
+let timerInterval = null;
+
+let exerciseRunning = false;
+
+let completedWorkouts =
+Number(localStorage.getItem("efitCompleted") || 0);
+
+let streak =
+Number(localStorage.getItem("efitStreak") || 12);
+
+
+/* ACTUALIZAR DATOS */
+
+function updateStats(){
+
+document.getElementById("homeCompleted").textContent =
+completedWorkouts;
+
+document.getElementById("completed").textContent =
+completedWorkouts;
+
+document.getElementById("streak").textContent =
+streak + " DÍAS";
+
+document.getElementById("progressStreak").textContent =
+streak + " DÍAS";
+
+}
+
+
+/* CAMBIAR PANTALLA */
+
+function showScreen(id,button){
+
+if(exerciseRunning){
+return;
+}
+
+document.querySelectorAll(".screen")
+.forEach(screen=>{
+screen.classList.remove("active");
+});
+
+document.getElementById(id)
+.classList.add("active");
+
+document.querySelectorAll(".nav button")
+.forEach(btn=>{
+btn.classList.remove("active");
+});
+
+if(button){
+button.classList.add("active");
+}
+
+}
+
+
+/* COMENZAR ENTRENAMIENTO */
+
+function startWorkout(){
+
+currentExercise = 0;
+
+loadExercise();
+
+showScreen(
+"workout",
+document.querySelectorAll(".nav button")[1]
+);
+
+}
+
+
+/* CARGAR EJERCICIO */
+
+function loadExercise(){
+
+clearInterval(timerInterval);
+
+exerciseRunning = false;
+
+timeLeft =
+exercises[currentExercise][1];
+
+document.getElementById("exerciseName")
+.textContent =
+exercises[currentExercise][0];
+
+document.getElementById("exerciseNumber")
+.textContent =
+"Ejercicio " +
+(currentExercise + 1) +
+" de " +
+exercises.length;
+
+document.getElementById("timer")
+.textContent =
+timeLeft;
+
+document.getElementById("message")
+.textContent =
+"Pulsa COMENZAR para iniciar.";
+
+document.getElementById("startButton")
+.disabled = false;
+
+document.getElementById("startButton")
+.textContent =
+"COMENZAR";
+
+document.getElementById("nextButton")
+.disabled = true;
+
+}
+
+
+/* INICIAR EJERCICIO */
+
+function startExercise(){
+
+if(exerciseRunning){
+return;
+}
+
+exerciseRunning = true;
+
+document.getElementById("startButton")
+.disabled = true;
+
+document.getElementById("startButton")
+.textContent =
+"EN CURSO";
+
+document.getElementById("message")
+.textContent =
+"NO PUEDES SALTAR. TERMINA LA SERIE.";
+
+timerInterval =
+setInterval(function(){
+
+timeLeft--;
+
+document.getElementById("timer")
+.textContent =
+timeLeft;
+
+if(timeLeft <= 0){
+
+clearInterval(timerInterval);
+
+exerciseRunning = false;
+
+document.getElementById("startButton")
+.textContent =
+"✓ SERIE COMPLETADA";
+
+document.getElementById("nextButton")
+.disabled = false;
+
+document.getElementById("message")
+.textContent =
+"✓ Serie terminada. Pulsa SIGUIENTE.";
+
+}
+
+},1000);
+
+}
+
+
+/* AQUÍ APARECE EL AVISO */
+
+function showFinished(){
+
+if(exerciseRunning){
+return;
+}
+
+let finished =
+exercises[currentExercise][0];
+
+let next =
+exercises[currentExercise + 1];
+
+document.getElementById("finishedExercise")
+.textContent =
+finished;
+
+if(next){
+
+document.getElementById("nextExercise")
+.textContent =
+next[0];
+
+}else{
+
+document.getElementById("nextExercise")
+.textContent =
+"¡ÚLTIMO EJERCICIO!";
+
+}
+
+showScreen("finished");
+
+}
+
+
+/* CONTINUAR */
+
+function continueExercise(){
+
+if(currentExercise <
+exercises.length - 1){
+
+currentExercise++;
+
+loadExercise();
+
+showScreen("workout");
+
+}else{
+
+completeWorkout();
+
+}
+
+}
+
+
+/* ENTRENAMIENTO COMPLETO */
+
+function completeWorkout(){
+
+completedWorkouts++;
+
+streak++;
+
+localStorage.setItem(
+"efitCompleted",
+completedWorkouts
+);
+
+localStorage.setItem(
+"efitStreak",
+streak
+);
+
+updateStats();
+
+alert(
+"¡ENTRENAMIENTO COMPLETADO!\\n\\n" +
+"Tu progreso se actualizó."
+);
+
+showScreen(
+"home",
+document.querySelectorAll(".nav button")[0]
+);
+
+}
+
+
+/* ABANDONAR */
+
+function abortWorkout(){
+
+clearInterval(timerInterval);
+
+exerciseRunning = false;
+
+loadExercise();
+
+showScreen(
+"home",
+document.querySelectorAll(".nav button")[0]
+);
+
+}
+
+
+updateStats();
+
+</script>
+
+</body>
+</html>
